@@ -1,34 +1,119 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
+import JSONPretty from 'react-json-pretty';
+import 'react-json-pretty/themes/monikai.css';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [response, setResponse] = useState("");
+
+  function handleSend(url) {
+    fetch(url)
+      .then(res => res.text())
+      .then(text => setResponse(text));
+  }
 
   return (
-    <>
+    <div>
+      <CommandsPanel handleSend={handleSend}  />
+      <PayloadsPanel />
+      <ResultPanel res={response}/>
+    </div>
+  )
+}
+
+function CommandsPanel({ handleSend }) {
+  const [url, setUrl] = useState("");
+
+  return (
+    <div>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        handleSend(url)
+      }}>
+        <div>
+          <select>
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="PATCH">PATCH</option>
+          </select>
+        </div>
+        <div>
+          <input type="url" value={url} onChange={(e) => setUrl(e.target.value)} />
+        </div>
+        <div>
+          <button>Send</button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+function PayloadsPanel() {
+  return (
+    <div>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <button>Params</button>
+        <button>Headers</button>
+        <button>Body</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ParamsTab />
+        </tbody>
+      </table>
+      <div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
+  )
+}
+
+function ParamsTab() {
+  return (
+    <tr>
+      <td><input type="checkbox" /></td>
+      <td><input type="text" /></td>
+      <td><input type="text" /></td>
+      <td><input type="text" /></td>
+      <td><button>delete</button></td>
+    </tr>
+  )
+}
+
+function HeadersTab() {
+  return (
+    <tr>
+      <td><input type="checkbox" /></td>
+      <td><input type="text" /></td>
+      <td><input type="text" /></td>
+      <td><input type="text" /></td>
+    </tr>
+  )
+}
+
+function BodyTab() {
+  return (
+    <div>
+      <h1>Body</h1>
+    </div>
+  )
+}
+
+function ResultPanel({ res }) {
+  return (
+    <div>
+      <h1>Response</h1>
+      <JSONPretty data={res}></JSONPretty>
+    </div>
   )
 }
 
