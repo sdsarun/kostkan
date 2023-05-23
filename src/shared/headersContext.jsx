@@ -12,7 +12,7 @@ export function useHeadersDispatch() {
 }
 
 export function HeadersProvider({ children }) {
-  const [headers, dispatch] = useReducer(headersReducer, []);
+  const [headers, dispatch] = useReducer(headersReducer, [{  name: "", value: "" }]);
 
   console.log(headers);
 
@@ -40,7 +40,6 @@ export function HeadersProvider({ children }) {
     dispatch({
       type: "ADD_HEADERS",
       payload: {
-        id: crypto.randomUUID(),
         name: "",
         value: ""
       }
@@ -105,12 +104,11 @@ function headersReducer(headers, action) {
     }
 
     case "ADD_HEADERS": {
-      const { name, value, id } = action.payload;
+      const { name, value } = action.payload;
       console.log("adding. ", name, value);
       return [
         ...headers,
         {
-          id,
           name,
           value,
         }

@@ -9,25 +9,30 @@ import { headerKeys } from "../shared/headerkeys.js";
 import { mediaKeys } from "../shared/mediakeys.js"
 import { useHeaders, useHeadersDispatch } from "../shared/headersContext";
 import HeaderDetail from "./HeadersDetail";
-import { useSenderDispatch } from "../shared/senderContext.jsx";
+import { useSender, useSenderDispatch } from "../shared/senderContext.jsx";
 
 export default function RequestSection() {
   const headers = useHeaders();
   const { createHeader } = useHeadersDispatch();
-  const { setMethod, setURL, sendRequest } = useSenderDispatch();
-  const [code, setCode] = useState("");
+
+  const { request } = useSender();
+  const { setMethod, setURL, sendRequest, setBody } = useSenderDispatch();
 
   function handleSend(e) {
     const actionType = e.type;
 
     if (actionType === "click") {
-      sendRequest(); 
+      sendRequest();
     } else if (actionType === "keydown") {
       const keyPress = e.key;
       if (keyPress === "Enter") {
         sendRequest();
       }
     }
+  }
+
+  function handleSetBody(text) {
+    setBody(text);
   }
 
   return (
@@ -40,6 +45,9 @@ export default function RequestSection() {
           <select className="border-2 border-gray-300 h-full pl-2 pr-10 rounded-md" onChange={(e) => setMethod(e.target.value)}>
             <option value="GET">GET</option>
             <option value='POST'>POST</option>
+            <option value='POST'>PUT</option>
+            <option value='POST'>PATCH</option>
+            <option value='POST'>DELETE</option>
           </select>
         </div>
         <div>
@@ -68,11 +76,12 @@ export default function RequestSection() {
                 Content - 1
               </Tab.Panel>
               <Tab.Panel>
-                Content - 2
                 <ReactCodeMirror
-                  onChange={(text) => setCode(text)}
+                  height="250px"
+                  onChange={(text) => handleSetBody(text)}
                   extensions={[json(), xml(), html()]}
                   theme={githubLight}
+                  style={{ fontSize: 16 }}
                 />
               </Tab.Panel>
               <Tab.Panel>
@@ -89,7 +98,7 @@ export default function RequestSection() {
                     </thead>
                     <tbody className="w-full">
                       {headers.map((header, index) => {
-                        return <HeaderDetail key={header.id} name={header.name} value={header.value} index={index} />
+                        return <HeaderDetail key={index} name={header.name} value={header.value} index={index} />
                       })}
                     </tbody>
                   </table>

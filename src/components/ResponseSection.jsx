@@ -4,9 +4,9 @@ import DOMPurify from 'dompurify';
 import { useSender } from '../shared/senderContext';
 
 export default function ResponseSection() {
-  const message = useSender();
+  const { response } = useSender();
   // console.log("REsponse : ", message)
-  const data = message.response.body;
+  const data = response.data;
   const cleanUpMarkup = DOMPurify.sanitize(data);
   return (
     <div >
@@ -25,9 +25,9 @@ export default function ResponseSection() {
             </div>
             <div>
               <div>
-                <span>200 OK</span>
-                <span>802 ms</span>
-                <span>853 B</span>
+                <span className="text-green-600">{`${response.status || ""} ${response.statusText || ""}`}</span>
+                {/* <span>802 ms</span> */}
+                {/* <span>853 B</span> */}
               </div>
             </div>
           </div>
