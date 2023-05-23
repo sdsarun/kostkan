@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useReducer } from "react";
 import { useHeaders } from "./headersContext";
+import { formatJSON } from "../shared/utils.js"
 
 const SenderContext = createContext({});
 const SenderDispatch = createContext();
@@ -19,11 +20,11 @@ export function SenderProvider({ children }) {
       method: "GET",
       url: "",
       headers: {},
-      data: {}
+      data: ""
     },
     response: {
       headers: {},
-      data: {}
+      data: ""
     }
   });
 
@@ -162,21 +163,29 @@ function senderReducer(message, action) {
 
     case "SET_HEADERS": {
       const { headers } = action.payload;
+
       const extractedObject = headers.reduce((prev, header) => {
-        const { name, value} = header;
+        const { name, value } = header;
+        if (!name || !value) return { ...prev };
         return { ...prev, [name]: value };
       }, {});
+
       return {
         ...message,
-        headers: extractedObject,
+        request: {
+          ...message.request,
+          headers: extractedObject,
+        }
       }
     }
 
     case "RECEIVE_RESPONSE": {
+      const { data } = action.payload;
       return {
         ...message,
         response: {
-          ...action.payload
+          ...action.payload,
+          data: formatJSON(data)
         }
       }
     }

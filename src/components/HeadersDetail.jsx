@@ -20,10 +20,10 @@ export default function HeaderDetail({ index, name, value }) {
 
   return (
     <tr>
-      <td><input className="w-full" type="checkbox" onClick={() => setDisabledInput(prev => !prev)} /></td>
-      <td><input className="border-2 w-full px-1" type="text" disabled={disabledInput} value={name} onChange={(e) => handleSetName(e.target.value.trim())} /></td>
-      <td><input className="border-2 w-full px-1" type="text" disabled={disabledInput} value={value} onChange={(e) => handleSetValue(e.target.value.trim())} /></td>
-      <td className="flex justify-center items-center"><input className="w-8" type="image" src={deleteIcon} disabled={disabledInput} onClick={() => handleDelete()} /></td>
+      <td className="border-r-2 hover:bg-gray-100"><input className="w-full border-r-2" type="checkbox" onClick={() => setDisabledInput(prev => !prev)} /></td>
+      <td className="border-r-2"><input className=" w-full px-1 outline-gray-400" type="text" disabled={disabledInput} value={name} placeholder="Key" onChange={(e) => handleSetName(e.target.value.trim())} /></td>
+      <td className="border-r-2"><input className=" w-full px-1 outline-gray-400" type="text" disabled={disabledInput} value={value} placeholder="Value" onChange={(e) => handleSetValue(e.target.value.trim())} /></td>
+      <td className="flex justify-center items-center "><input className="w-5 hover:bg-gray-100" type="image" src={deleteIcon} disabled={disabledInput} onClick={() => handleDelete()} /></td>
     </tr>
   )
 }
